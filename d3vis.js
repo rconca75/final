@@ -66,7 +66,7 @@
   // Add the x-axis and label.
   svg.append("g")
       .attr("transform", `translate(${(x(2023)-x(2022)-1)/2},${height - marginBottom})`)
-      .call(d3.axisBottom(x).ticks(30).tickSizeOuter(0))
+      .call(d3.axisBottom(x).ticks(30,"f").tickSizeOuter(0))
 
 
     vis.append(svg.node());
