@@ -12,3 +12,16 @@
 ### Initial Sketch of Visualization
 
 ![Vis Sketch](img/final%20project%20plans-1.jpg)
+
+## Meeting 2: 3/3/2026
+
+### Updates since previous meeting
+
+- Max created JS file to link to the HTML file to start building our site.
+- Max uploaded data from the CSV file and created a bar graph visualization that graphs total amount of quotes per year.
+- Also created an interactive feature that changes the color of the bars when the user hovers over them.
+- Rachel added an animation on load for the bar chart where the bars rise from 0 to their respective heights.
+
+### Screenshot of updates
+
+![Bar Graph Screenshot 1](img/bar%20chart%20screenshot%201.png)
