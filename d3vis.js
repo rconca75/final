@@ -9,7 +9,7 @@
   var selectedPhoto = -1;
 
     document.getElementById("picturescroll").style.width = width+"px";
-    document.getElementById("picturescroll").style.height = "100px";
+    document.getElementById("picturescroll").style.height = "120px";
     document.getElementById("picturescroll").style.overflowX = "scroll";
 
   // select container
@@ -25,7 +25,7 @@
     const photo = d3.select("#picturescroll");
     const photosvg = photo.append("svg")
         .attr("width",5700)
-        .attr("height",150)
+        .attr("height",100)
 
   d3.csv("../data/onion_data.csv",d3.autoType).then(function(data) {
 
@@ -113,7 +113,7 @@
                     d3.select("this")
                         .attr("opacity", 1)
                 })
-                .on("mouseleave", function(event, d) {
+                .on("mouseout", function(event, d) {
                     d3.select("this")
                         .attr("opacity", 0.8)
                 })
