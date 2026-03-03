@@ -6,6 +6,8 @@
   const marginBottom = 30;
   const marginLeft = 40;
 
+  var selectedPhoto = -1;
+
     document.getElementById("picturescroll").style.width = width+"px";
     document.getElementById("picturescroll").style.height = "100px";
     document.getElementById("picturescroll").style.overflowX = "scroll";
@@ -102,7 +104,10 @@
                 .attr("x", (d,i) => i*100)
                 .attr("y",0)
                 .attr("width",100)
-                .attr("height",100);
+                .attr("height",100)
+                .on("click",(event,d,i) => {
+                    selectedPhoto = d.picture_category; 
+                    console.log(selectedPhoto)});
       })
 
     //vis.append(svg.node());
