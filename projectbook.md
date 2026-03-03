@@ -30,3 +30,7 @@
 
 - Worked on adding a scrollable div at the top of our site so that users can scroll through a list of photos to select the one they want to learn more about.
 - Added a CSS file for standardized styling similar to The Onion's webpage (using their hex of green and white text)
+
+### Screenshot of post-meeting site
+
+![Bar Chart Screenshot 2](img/bar%20chart%20screenshot%202.png)
