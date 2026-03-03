@@ -1,16 +1,33 @@
 // Declare the chart dimensions and margins.
-  const width = 1300;
-  const height = 550;
-  const marginTop = 300;
+  const width = 1200;
+  const height = 300;
+  const marginTop = 30;
   const marginRight = 40;
   const marginBottom = 30;
   const marginLeft = 40;
 
+    document.getElementById("picturescroll").style.width = width+"px";
+    document.getElementById("picturescroll").style.height = "100px";
+    document.getElementById("picturescroll").style.overflowX = "scroll";
+
   // select container
   const vis = d3.select("#vis")
 
+    const svg = vis.append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .attr("viewBox", `0, 0, ${width}, ${height}`)
+      .attr("style", "max-width: 100%; height: auto; display:block;");
+
+
+    const photo = d3.select("#picturescroll");
+    const photosvg = photo.append("svg")
+        .attr("width",3000)
+        .attr("height",150)
+
   d3.csv("../data/onion_data.csv",d3.autoType).then(function(data) {
 
+  // append svg to container
 
     data.forEach( function (d){
         d.year = d.date.getFullYear();
@@ -40,13 +57,6 @@
   const y = d3.scaleLinear()
       .domain([0, d3.max(bins, (d) => d.length)])
       .range([height - marginBottom, marginTop]);
-
-  // append svg to container
-  const svg = vis.append("svg")
-      .attr("width", width)
-      .attr("height", height)
-      .attr("viewBox", `0, 0, ${width}, ${height}`)
-      .attr("style", "max-width: 100%; height: auto; display:block;");
 
   // Add a rect for each bin.
   svg.append("g")
@@ -80,6 +90,19 @@
         .attr("height", d => y(0) - y(d.length))
         .delay((d, i) => {console.log(i); return i*100})
 
-
-    vis.append(svg.node());
     })
+
+        //Photo Bar
+      d3.csv("../data/photos.csv",d3.autoType).then(function(data) {
+            photosvg.append("g")
+            .selectAll('image')
+            .data(data)
+            .join('image')
+                .attr("href", d => d.example_img_link)
+                .attr("x", (d,i) => i*100)
+                .attr("y",0)
+                .attr("width",100)
+                .attr("height",100);
+      })
+
+    //vis.append(svg.node());
