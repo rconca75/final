@@ -125,3 +125,6 @@ References
 ---
 
 - This final project is adapted from https://www.dataviscourse.net/2020/project/
+
+
+Dataset link: https://codywinchester.com/the-onion-american-voices/
