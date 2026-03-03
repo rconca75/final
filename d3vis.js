@@ -24,7 +24,7 @@
 
     const photo = d3.select("#picturescroll");
     const photosvg = photo.append("svg")
-        .attr("width",3000)
+        .attr("width",5700)
         .attr("height",150)
 
   d3.csv("../data/onion_data.csv",d3.autoType).then(function(data) {
