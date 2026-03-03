@@ -9,6 +9,8 @@ h1 {
 }
 h2 {
     color: #016b3a;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    padding-left: 10px;
 }
 p {
     font-family: 'Times New Roman', Times, serif;
