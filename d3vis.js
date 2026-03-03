@@ -105,9 +105,18 @@
                 .attr("y",0)
                 .attr("width",100)
                 .attr("height",100)
+                .attr("opacity", 0.8)
                 .on("click",(event,d,i) => {
                     selectedPhoto = d.picture_category; 
-                    console.log(selectedPhoto)});
+                    console.log(selectedPhoto)})
+                .on("mouseover", function(event, d) {
+                    d3.select("this")
+                        .attr("opacity", 1)
+                })
+                .on("mouseleave", function(event, d) {
+                    d3.select("this")
+                        .attr("opacity", 0.8)
+                })
       })
 
     //vis.append(svg.node());
