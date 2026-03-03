@@ -50,7 +50,7 @@
 
   // Add a rect for each bin.
   svg.append("g")
-    .attr("fill", "white")
+    .attr("fill", "#016b3a")
     .selectAll()
     .data(bins)
     .join("rect")
@@ -64,7 +64,7 @@
         })
         .on("mouseout",function(event,d){
             d3.select(this)
-                .attr("fill","white");
+                .attr("fill","#016b3a");
         })
 
   // Add the x-axis and label.

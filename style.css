@@ -1,7 +1,13 @@
 body {
-    background-color: #19851f;
+    background-color: #ffffff;
 }
 h1 {
-    color: #ffffff;
-    font-family: courier;
+    color: #016b3a;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    padding-left: 10px;
+}
+p {
+    font-family: 'Times New Roman', Times, serif;
+    padding-left: 20px;
 }
