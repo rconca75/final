@@ -96,9 +96,9 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
         .delay((d, i) => {console.log(i); return i*100})
 
 
-      const yLine = d3.scaleLinear()
-    .domain([0, 1]) // will be updated per photo in update()
-    .range([height - marginBottom, marginTop]);
+    const yLine = d3.scaleLinear()
+        .domain([0, 1]) // will be updated per photo in update()
+        .range([height - marginBottom, marginTop]);
 
     // right y-axis group (for line scale)
     const yLineAxisG = svg.append("g")
@@ -110,53 +110,99 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
     // years array so line includes 0s 
     const years = d3.range(minYear, maxYear + 1);
 
+    // calculate global max across photos
+    const globalMaxCount = d3.max(
+        Array.from(d3.group(data, d => d.picture_category).values()),
+        group => d3.max(d3.rollup(group, v => v.length, d => d.year).values())
+    ) || 1;
+
     function update(photoID) {
-    lineGroup.selectAll("*").remove(); // clear previous line and dots
+        console.log("update called with photoID:", photoID);
+        // clear line if nothing selected
+        if (photoID == null || photoID === -1) {
+            lineGroup.selectAll("*").remove();
+            return;
+        }
 
-    // clear line if nothing selected
-    if (photoID == null || photoID === -1) {
-      lineGroup.selectAll("*").remove();
-      return;
-    }
+        // filter onion data for selected photo
+        const filtered = data.filter(d => d.picture_category === photoID);
+        console.log("filtered data length:", filtered.length);
 
-    // filter onion data for selected photo
-    const filtered = data.filter(d => d.picture_category === photoID);
+        // counts per year for that photo
+        const counts = d3.rollup(filtered, v => v.length, d => d.year);
 
-    // counts per year for that photo
-    const counts = d3.rollup(filtered, v => v.length, d => d.year);
-
-    const series = years.map(yr => ({ // builds series over all year
-      year: yr,
-      count: counts.get(yr) || 0
-    }));
+        const series = years.map(yr => ({ // builds series over all year
+            year: yr,
+            count: counts.get(yr) || 0
+        }));
+        console.log("series:", series);
 
     const maxC = d3.max(series, d => d.count) || 1;
-    yLine.domain([0, maxC]);
+    yLine.domain([0, globalMaxCount]);
 
     // draw/update right axis
-    yLineAxisG.call(d3.axisRight(yLine).ticks(Math.min(maxC, 5)).tickSizeOuter(0));
+    yLineAxisG.call(
+        d3.axisRight(yLine)
+        .ticks(Math.min(5))
+        .tickSizeOuter(0)
+    );
 
     const line = d3.line()
       .x(d => x(d.year))
       .y(d => yLine(d.count));
 
     // draw/update line
-    lineGroup.selectAll("path")
-      .data([series])
-      .join("path")
+    const pathUpdate = lineGroup.selectAll("path")
+        .data([series])
+    
+    pathUpdate.enter().append("path")
         .attr("fill", "none")
         .attr("stroke", "black")
         .attr("stroke-width", 2)
-        .attr("d", line);
+        .attr("d", d => line(d.map(p => ({year: p.year, count: 0}))))
+        .merge(pathUpdate)
+        .transition()
+        .duration(500)
+        .attrTween("d", function (d) {
+            const previousSeries = this.__previousSeries || d.map(p => ({year: p.year, count: 0}));
+            this.__previousSeries = d;
+            return function(t) {
+                const interpSeries = d.map((p, i) => ({
+                    year: p.year,
+                    count: previousSeries[i].count + (p.count - previousSeries[i].count) * t
+                }));
+                return line(interpSeries);
+            }
+        });
+    console.log("path count after update:", lineGroup.selectAll("path").size());
 
     // dots for readability
-    lineGroup.selectAll("circle")
-      .data(series.filter(d => d.count > 0))
-      .join("circle")
-        .attr("cx", d => x(d.year))
-        .attr("cy", d => yLine(d.count))
+    const circleUpdate = lineGroup.selectAll("circle")
+        .data(series.filter(d => d.count > 0), d => d.year);
+    
+    circleUpdate.enter().append("circle")
         .attr("r", 3)
-        .attr("fill", "black");
+        .attr("stroke", "black")
+        .attr("stroke-width", "1px")
+        .attr("fill", "white")
+        .attr("cx", d => x(d.year))
+        .attr("cy", d => yLine(0))
+        .merge(circleUpdate)
+        .transition()
+        .duration(500)
+        .attr("cx", d => x(d.year))
+        .attr("cy", d => yLine(d.count));
+
+    // remove 0 entry circles
+    circleUpdate.exit()
+        .transition()
+        .duration(500)
+        .attr("cy", d => yLine(0))
+        .remove();
+    console.log("circle count after update", lineGroup.selectAll("circle").size());
+    
+    // prevent lines from rendering behind the bars
+    lineGroup.raise();
 
     // debugging info
     console.log("photo", photoID, "total uses", filtered.length, "max/year", maxC);
