@@ -35,3 +35,12 @@
 ### Screenshot of post-meeting site
 
 ![Bar Chart Screenshot 2](img/bar%20chart%20screenshot%202.png)
+
+## Meeting 3: 3/4/2026
+
+- Elias worked on adding the line graph that tracks how frequently a selected image appears throughout the years. Selecting an image from the photo bar updates the line chart in real time in comparison to the bar chart.
+- Elias attempted to fix issues with the photo scroll div interactivity, works on local computer currently.
+
+### Screenshot of post-meeting site
+
+![Line Graph](img/line%20graph%20.png)
