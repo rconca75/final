@@ -43,4 +43,4 @@
 
 ### Screenshot of post-meeting site
 
-![Line Graph](img/line%20graph%20.png)
+![Line Graph](img/line-graph.png)
