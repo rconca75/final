@@ -108,14 +108,14 @@
                 .attr("opacity", 0.8)
                 .on("click",(event,d,i) => {
                     selectedPhoto = d.picture_category; 
-                    console.log(selectedPhoto)})
+                    console.log(selectedPhoto);})
                 .on("mouseover", function(event, d) {
-                    d3.select("this")
-                        .attr("opacity", 1)
+                    d3.select(this)
+                        .attr("opacity", 1);
                 })
                 .on("mouseout", function(event, d) {
-                    d3.select("this")
-                        .attr("opacity", 0.8)
+                    d3.select(this)
+                        .attr("opacity", 0.8);
                 })
       })
 
