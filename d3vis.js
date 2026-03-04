@@ -35,25 +35,22 @@
         d.year = d.date.getFullYear();
     });
 
-//    const bins = d3.bin().value((d) => d.year).thresholds(d => d3.max(d.year)-d3.min(d.year))(data);
 
-    function thresholdTime(n) {
-    return (data, min, max) => {
-        return d3.scaleUtc().domain([min, max]).ticks(n);
-    };
-    }
-
-    const bins = d3.bin()
-    .value(d => d.date)
-    .thresholds(thresholdTime(30))
-    (data)
-
-    console.log(bins);
+    // use year based binning
+    const yearGroups = d3.rollup(data, v => v.length, d => d.year);
+    const bins = Array.from(yearGroups, ([year, count]) => ({
+        x0: new Date(year, 0, 1),
+        x1: new Date(year + 1, 0, 1),
+        length: count
+    })).sort((a, b) => a.x0 - b.x0)
 
 // Declare the x (horizontal position) scale.
+  const minYear = d3.min(data, d => d.year);
+  const maxYear = d3.max(data, d => d.year);
+
   const x = d3.scaleLinear()
-      .domain([bins[0].x0.getFullYear(), bins[bins.length - 1].x1.getFullYear()])
-      .range([marginLeft, width - marginRight]);
+    .domain([minYear, maxYear])
+    .range([marginLeft, width - marginRight]);
 
   // Declare the y (vertical position) scale.
   const y = d3.scaleLinear()
@@ -101,22 +98,34 @@
             .data(data)
             .join('image')
                 .attr("href", d => d.example_img_link)
-                .attr("x", (d,i) => i*100)
-                .attr("y",0)
-                .attr("width",100)
-                .attr("height",100)
-                .attr("opacity", 0.8)
-                .on("click",(event,d,i) => {
+                .attr("x", (d,i) => {d._x = i*110; return d._x;})
+                .attr("y", 0)
+                .attr("width", 100)
+                .attr("height", 100)
+                .on("click", (event,d,i) => {
                     selectedPhoto = d.picture_category; 
                     console.log(selectedPhoto);})
                 .on("mouseover", function(event, d) {
                     d3.select(this)
-                        .attr("opacity", 1);
+                        .attr("opacity", 1)
+                        .attr("x", d._x - 5)
+                        .attr("height", 110)
+                        .attr("width", 110);
                 })
                 .on("mouseout", function(event, d) {
                     d3.select(this)
-                        .attr("opacity", 0.8);
+                        .attr("opacity", 0.5)
+                        .attr("x", d._x)
+                        .attr("height", 100)
+                        .attr("width", 100)
                 })
+                .attr("opacity", 0)
+                    .transition()
+                    .duration(800)
+                    .attr("opacity", 0.5)
+                    .delay((d, i) => i * 100);
+            
+        
       })
 
     //vis.append(svg.node());
