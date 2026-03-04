@@ -44,7 +44,7 @@
         length: count
     })).sort((a, b) => a.x0 - b.x0)
 
-// Declare the x (horizontal position) scale.
+// Declare the x (horizontal position) scale (year based scaling)
   const minYear = d3.min(data, d => d.year);
   const maxYear = d3.max(data, d => d.year);
 
