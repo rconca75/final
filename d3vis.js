@@ -73,7 +73,7 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
       .on("mouseover", function(event, d) {
             d3.select(this).attr("fill", "black");
             tooltip.style("opacity", 1)
-                .html(`<strong>${d.x0.getFullYear()}</strong><br>Articles: ${d.length}`);
+                .html(`<strong>${d.x0.getFullYear()}</strong><br>Total Quotes: ${d.length}`);
         })
         .on("mousemove", function(event) {
             tooltip.style("left", (event.pageX + 14) + "px")
