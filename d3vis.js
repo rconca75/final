@@ -8,6 +8,10 @@
 
   var selectedPhoto = -1;
 
+  // Shared tooltip
+  const tooltip = d3.select("body").append("div")
+      .attr("class", "tooltip");
+
     document.getElementById("picturescroll").style.width = width+"px";
     document.getElementById("picturescroll").style.height = "120px";
     document.getElementById("picturescroll").style.overflowX = "scroll";
@@ -66,13 +70,18 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
         .attr("width", barWidth)
       .attr("y", (d) => y(0))
       .attr("height", 0)
-      .on("mouseover",function(event,d){
-            d3.select(this)
-                .attr("fill","black");
+      .on("mouseover", function(event, d) {
+            d3.select(this).attr("fill", "black");
+            tooltip.style("opacity", 1)
+                .html(`<strong>${d.x0.getFullYear()}</strong><br>Articles: ${d.length}`);
         })
-        .on("mouseout",function(event,d){
-            d3.select(this)
-                .attr("fill","#016b3a");
+        .on("mousemove", function(event) {
+            tooltip.style("left", (event.pageX + 14) + "px")
+                   .style("top",  (event.pageY - 36) + "px");
+        })
+        .on("mouseout", function(event, d) {
+            d3.select(this).attr("fill", "#016b3a");
+            tooltip.style("opacity", 0);
         })
 
   // Add the x-axis and label.
@@ -180,14 +189,29 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
     const circleUpdate = lineGroup.selectAll("circle")
         .data(series.filter(d => d.count > 0), d => d.year);
     
-    circleUpdate.enter().append("circle")
+    const circleMerged = circleUpdate.enter().append("circle")
         .attr("r", 3)
         .attr("stroke", "black")
         .attr("stroke-width", "1px")
         .attr("fill", "white")
         .attr("cx", d => x(d.year))
         .attr("cy", d => yLine(0))
-        .merge(circleUpdate)
+        .merge(circleUpdate);
+
+    circleMerged
+        .on("mouseover", function(event, d) {
+            tooltip.style("opacity", 1)
+                .html(`<strong>${d.year}</strong><br>Appearances: ${d.count}`);
+        })
+        .on("mousemove", function(event) {
+            tooltip.style("left", (event.pageX + 14) + "px")
+                   .style("top",  (event.pageY - 36) + "px");
+        })
+        .on("mouseout", function() {
+            tooltip.style("opacity", 0);
+        });
+
+    circleMerged
         .transition()
         .duration(500)
         .attr("cx", d => x(d.year))
@@ -212,11 +236,14 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
 
   window.updateSelectedPhotoLine = update; // makes update callable from photo csv click 
 
+        // precompute total uses per photo from onion data
+        const photoUseCounts = d3.rollup(data, v => v.length, d => d.picture_category);
+
         //Photo Bar
-      d3.csv("../data/photos.csv",d3.autoType).then(function(data) {
+      d3.csv("../data/photos.csv",d3.autoType).then(function(photoData) {
             photosvg.append("g")
             .selectAll('image')
-            .data(data)
+            .data(photoData)
             .join('image')
                 .attr("href", d => d.example_img_link)
                 .attr("x", (d,i) => {d._x = i*110; return d._x;})
@@ -235,13 +262,21 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
                         .attr("x", d._x - 5)
                         .attr("height", 110)
                         .attr("width", 110);
+                    const uses = photoUseCounts.get(d.picture_category) || 0;
+                    tooltip.style("opacity", 1)
+                        .html(`<strong>Photo #${d.picture_category}</strong><br>Total uses: ${uses}`);
+                })
+                .on("mousemove", function(event) {
+                    tooltip.style("left", (event.pageX + 14) + "px")
+                           .style("top",  (event.pageY - 36) + "px");
                 })
                 .on("mouseout", function(event, d) {
                     d3.select(this)
                         .attr("opacity", 0.5)
                         .attr("x", d._x)
                         .attr("height", 100)
-                        .attr("width", 100)
+                        .attr("width", 100);
+                    tooltip.style("opacity", 0);
                 })
                 .attr("opacity", 0)
                     .transition()
