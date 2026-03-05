@@ -201,7 +201,9 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
     circleMerged
         .on("mouseover", function(event, d) {
             tooltip.style("opacity", 1)
-                .html(`<strong>${d.year}</strong><br>Appearances: ${d.count}`);
+                .html(
+                    `<strong>${d.year}</strong><br>Appearances: ${d.count}`
+                );
         })
         .on("mousemove", function(event) {
             tooltip.style("left", (event.pageX + 14) + "px")
