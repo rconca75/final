@@ -240,15 +240,27 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
 
         // precompute total uses per photo from onion data
         const photoUseCounts = d3.rollup(data, v => v.length, d => d.picture_category);
+        var photos = photoUseCounts;
+        console.log(photos);
+        const sortedData = d3.sort(photoUseCounts,(a, b) => d3.descending(a[1], b[1]));
+        const order = sortedData.map(innerArray => innerArray[0]);
+        console.log(order);
+
+
 
         //Photo Bar
       d3.csv("../data/photos.csv",d3.autoType).then(function(photoData) {
+        var photoDataOrdered = photoData;
+        for(i = 0; i< photoData.length; i++){
+            photoDataOrdered[i].order = order.indexOf(photoData[i].picture_category);
+        }
+        console.log(photoDataOrdered);
             photosvg.append("g")
             .selectAll('image')
             .data(photoData)
             .join('image')
                 .attr("href", d => d.example_img_link)
-                .attr("x", (d,i) => {d._x = i*110; return d._x;})
+                .attr("x", (d,i) => {d._x = d.order*110; return d._x;})
                 .attr("y", 0)
                 .attr("width", 100)
                 .attr("height", 100)
