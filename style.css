@@ -5,14 +5,41 @@ h1 {
     color: #016b3a;
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-weight: bold;
-    padding-left: 10px;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 h2 {
     color: #016b3a;
     font-family: Georgia, 'Times New Roman', Times, serif;
-    padding-left: 10px;
+    padding-left: 7.5%;
+    padding-right: 7.5%;
+    text-align: justify;
+}
+h3 {
+    color: #016b3a;
+    font-family: 'Courier New', Courier, monospace;
+    padding-left: 9%;
+    padding-right: 9%;
 }
 p {
-    font-family: 'Times New Roman', Times, serif;
-    padding-left: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-left: 10%;
+    padding-right: 10%;
+    text-align: justify;
+}
+
+.tooltip {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.82);
+    color: #ffffff;
+    padding: 7px 11px;
+    border-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.12s;
+    line-height: 1.5;
+    z-index: 10;
 }
