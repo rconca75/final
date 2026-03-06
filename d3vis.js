@@ -276,7 +276,7 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
 
 
         //Photo Bar
-      d3.csv("../data/photos.csv",d3.autoType).then(function(photoData) {
+      d3.csv("data/photos.csv",d3.autoType).then(function(photoData) {
         //sort the photo data by most used to least used
         var photoDataOrdered = photoData;
         for(i = 0; i< photoData.length; i++){
