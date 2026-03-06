@@ -330,7 +330,7 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
                     .transition()
                     .duration(800)
                     .attr("opacity", 0.5)
-                    .delay((d, i) => i * 100);
+                    .delay((d, i) => d.order * 100);
       })
     });
     //vis.append(svg.node());
