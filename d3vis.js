@@ -7,6 +7,7 @@
   const marginLeft = 40;
 
   var selectedPhoto = -1;
+var photoArticles = []; 
 
   // Shared tooltip
   const tooltip = d3.select("body").append("div")
@@ -240,21 +241,48 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
 
         // precompute total uses per photo from onion data
         const photoUseCounts = d3.rollup(data, v => v.length, d => d.picture_category);
-        var photos = photoUseCounts;
-        console.log(photos);
         const sortedData = d3.sort(photoUseCounts,(a, b) => d3.descending(a[1], b[1]));
         const order = sortedData.map(innerArray => innerArray[0]);
-        console.log(order);
 
+
+        //create photo relations
+        const photogroups = d3.group(data, d => d.picture_category);
+        let keys = Array.from(photogroups.keys());
+        console.log(keys);
+        keys.forEach(function(d){
+            var articles = {id:d,articles:d3.map(photogroups.get(d),d => d.article_id)};
+            photoArticles.push(articles);
+        });
+        console.log(photoArticles);
+
+        function findMostCommonPhotos(index){
+            commonArticles = []
+            photoArticles.forEach(function(d){
+                if(index != d.id){
+                    commonArticles.push({id:d.id,common:d3.intersection(photoArticles[index].articles,d.articles)});
+                }
+            })
+            commonArticles = d3.sort(commonArticles,(a, b) => d3.descending(a.common.size, b.common.size));
+            let max = commonArticles[0].common.size;
+            let allmax = []
+            commonArticles.forEach(function(d){
+                if(d.common.size == max){
+                    allmax.push(d.id);
+                }
+            })
+
+            return allmax
+        }
 
 
         //Photo Bar
-      d3.csv("../data/photos.csv",d3.autoType).then(function(photoData) {
+      d3.csv("data/photos.csv",d3.autoType).then(function(photoData) {
+        //sort the photo data by most used to least used
         var photoDataOrdered = photoData;
         for(i = 0; i< photoData.length; i++){
             photoDataOrdered[i].order = order.indexOf(photoData[i].picture_category);
         }
-        console.log(photoDataOrdered);
+        //console.log(photoDataOrdered);
             photosvg.append("g")
             .selectAll('image')
             .data(photoData)
@@ -277,8 +305,11 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
                         .attr("height", 110)
                         .attr("width", 110);
                     const uses = photoUseCounts.get(d.picture_category) || 0;
+                    const common = findMostCommonPhotos(d.picture_category);
+                    d3.selectAll('image').select(function(d, i) { console.log(d.picture_category); return common.includes(d.picture_category) ? this : null; })
+                        .attr("opacity",0.8)
                     tooltip.style("opacity", 1)
-                        .html(`<strong>Photo #${d.picture_category}</strong><br>Total uses: ${uses}`);
+                        .html(`<strong>Photo #${d.picture_category}</strong><br>Total uses: ${uses}</strong><br>Most often found alongside photos: ${common}`);
                 })
                 .on("mousemove", function(event) {
                     tooltip.style("left", (event.pageX + 14) + "px")
@@ -291,12 +322,15 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
                         .attr("height", 100)
                         .attr("width", 100);
                     tooltip.style("opacity", 0);
+                    const common = findMostCommonPhotos(d.picture_category);
+                    d3.selectAll('image').select(function(d, i) { console.log(d.picture_category); return common.includes(d.picture_category) ? this : null; })
+                        .attr("opacity",0.5)
                 })
                 .attr("opacity", 0)
                     .transition()
                     .duration(800)
                     .attr("opacity", 0.5)
-                    .delay((d, i) => i * 100);
+                    .delay((d, i) => d.order * 100);
       })
     });
     //vis.append(svg.node());
