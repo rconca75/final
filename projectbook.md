@@ -50,6 +50,7 @@
 ### Updates since previous meeting
 
 - Rachel edited line graph to be on a standardized y-axis for ease of comparison between different photo data. Also changed some stylistic things to make the points easier to read
+- Also added smooth transitions on the line graph to transition between the data of two different photos.
 - Rohit added tooltips to display relevant information about photos, bars, and points on the line graph.
 - Max updated the photo tooltip to display statistics on which photos were commonly shown with other photos and highlighting the most commonly shown photos when tooling over a photo.
 - Max changed the order of the photos so the most used photos load in first rather than loading all the photos by ID number.
@@ -62,3 +63,12 @@
 
 - Rachel fixed photo transition on load in since it got messed up when changing the photo order.
 - Max added feature that highlights the "in common" photos when tooling over a photo.
+- Updated HTML page with more information about the project.
+- Updated styling for the HTML webpage
+- Full group practiced runthroughs of the final recording of the project.
+- Recorded runthroughs of the final recording and uploaded the best take to YouTube as an unlisted video.
+- Eilas embedded the final video link into the site for easy access.
+
+### Screenshot of post-meeting site
+
+![Project Site Screenshot](img/project%20screenshot%204.png)
