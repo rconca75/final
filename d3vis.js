@@ -306,6 +306,8 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
                         .attr("width", 110);
                     const uses = photoUseCounts.get(d.picture_category) || 0;
                     const common = findMostCommonPhotos(d.picture_category);
+                    d3.selectAll('image').select(function(d, i) { console.log(d.picture_category); return common.includes(d.picture_category) ? this : null; })
+                        .attr("opacity",0.8)
                     tooltip.style("opacity", 1)
                         .html(`<strong>Photo #${d.picture_category}</strong><br>Total uses: ${uses}</strong><br>Most often found alongside photos: ${common}`);
                 })
@@ -320,6 +322,9 @@ const barWidth = x(minYear + 1) - x(minYear) - 1;
                         .attr("height", 100)
                         .attr("width", 100);
                     tooltip.style("opacity", 0);
+                    const common = findMostCommonPhotos(d.picture_category);
+                    d3.selectAll('image').select(function(d, i) { console.log(d.picture_category); return common.includes(d.picture_category) ? this : null; })
+                        .attr("opacity",0.5)
                 })
                 .attr("opacity", 0)
                     .transition()
